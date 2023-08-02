@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   Dialog,
   DialogDescription,
   DialogHeader,
   DialogContent,
   DialogTitle,
+  DialogFooter,
 } from "./ui/dialog";
 
 import {
@@ -15,12 +16,15 @@ import {
   MessageSquare,
   Music,
   VideoIcon,
+  Zap,
 } from "lucide-react";
 
 import { useProModal } from "@/hooks/useProModal";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { Button } from "./ui/button";
 
 const tools = [
   {
@@ -59,6 +63,21 @@ interface ProModalProps {}
 
 const ProModal: FC<ProModalProps> = ({}) => {
   const proModal = useProModal();
+  const [loading, setIsLoading] = useState(false);
+
+  const onSubscribe = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get("/api/stripe");
+
+      window.location.href = response.data.url;
+    } catch (error: any) {
+      console.log(error, "STRIPE_CLIENT_ERROR");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={proModal.isOpen} onOpenChange={proModal.onClose}>
@@ -72,7 +91,7 @@ const ProModal: FC<ProModalProps> = ({}) => {
               </Badge>
             </div>
           </DialogTitle>
-          <DialogDescription className="text-center pt-2 space-y-2 text-zinc-900 font-medium">
+          <DialogDescription className="w-full text-center pt-2 space-y-2 text-zinc-900 font-medium">
             {tools.map((tool) => (
               <Card
                 key={tool.label}
@@ -89,6 +108,17 @@ const ProModal: FC<ProModalProps> = ({}) => {
             ))}
           </DialogDescription>
         </DialogHeader>
+        <DialogFooter>
+          <Button
+            onClick={onSubscribe}
+            size="lg"
+            variant="premium"
+            className="w-full"
+          >
+            Upgrade
+            <Zap className="w-4 h-4 ml-2 fill-white" />
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
