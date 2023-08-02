@@ -18,8 +18,10 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import Loader from "@/components/Loader";
+import { useProModal } from "@/hooks/useProModal";
 
 const MusicPage = () => {
+  const proModal = useProModal();
   const router = useRouter();
   const [music, setMusic] = useState<string>();
 
@@ -42,9 +44,9 @@ const MusicPage = () => {
 
       form.reset();
     } catch (error: any) {
-      // TODO: Open Pro Modal
-
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
