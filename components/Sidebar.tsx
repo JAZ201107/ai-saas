@@ -16,6 +16,7 @@ import {
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import FreeCounter from "./FreeCounter";
 
 const montserrat = Montserrat({
   weight: "600",
@@ -66,7 +67,11 @@ const routes = [
   },
 ];
 
-const Sidebar: FC = ({}) => {
+interface SidebarProps {
+  apiLimitCount: number;
+}
+
+const Sidebar: FC<SidebarProps> = ({ apiLimitCount }) => {
   const pathname = usePathname();
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white ">
@@ -100,6 +105,8 @@ const Sidebar: FC = ({}) => {
           ))}
         </div>
       </div>
+
+      <FreeCounter apiLimitCount={apiLimitCount} />
     </div>
   );
 };
