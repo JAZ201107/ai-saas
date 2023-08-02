@@ -25,6 +25,7 @@ import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Button } from "./ui/button";
+import { toast } from "react-hot-toast";
 
 const tools = [
   {
@@ -73,7 +74,7 @@ const ProModal: FC<ProModalProps> = ({}) => {
 
       window.location.href = response.data.url;
     } catch (error: any) {
-      console.log(error, "STRIPE_CLIENT_ERROR");
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -114,6 +115,7 @@ const ProModal: FC<ProModalProps> = ({}) => {
             size="lg"
             variant="premium"
             className="w-full"
+            disabled={loading}
           >
             Upgrade
             <Zap className="w-4 h-4 ml-2 fill-white" />
